@@ -1,11 +1,17 @@
-# Snake Game App - Personal Project
+# Snake Game App
 
 
 
 ## Features
 
+[ ] Start screen
+[ ] Score board (current score, high score)
+[ ] Collision Detection
+[ ] keyboard movement
+[ ] snake growth
+[ ] Random food spanning
+[ ] incrementing game speed (increased difficulty)
 [ ] 
-
 
 
 --- 

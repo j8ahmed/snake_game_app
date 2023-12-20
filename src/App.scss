@@ -1,0 +1,65 @@
+/* Snake Game App styles */
+
+$white: rgb(255,255,255);
+$teal: rgb(0,175,175);
+$green: rgb(0,175,0);
+$red: rgb(175,0,0);
+$game_width: 320px;
+*{
+    box-sizing: border-box;
+}
+body {
+  margin: 0;
+  padding: 0;
+  background: rgb(30,30,30);
+  color: white;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+
+.App{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .title{
+        text-align: center;
+    }
+    .scoreboard{
+        width: $game_width;
+        display: flex;
+        justify-content: space-between;
+        text-align: center;
+        h3{
+            padding: 0;
+            margin: 0;
+
+            &.number{
+                padding-bottom: 8px;
+            }
+        }
+    }
+    .game-board{
+        width: $game_width;
+        height: 320px;
+        display: grid;
+        grid-template-columns: repeat(20, 16px);
+        grid-template-rows: repeat(20, 16px);
+        border: solid $white;
+
+        .snake-segment{
+            background: $green;
+            &.head{
+                background: $teal;
+            }
+        }
+        .food{
+            background: $red;
+        }
+    }
+
+}
+
