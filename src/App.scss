@@ -43,21 +43,25 @@ body {
         }
     }
     .game-board{
-        width: $game_width;
-        height: 320px;
-        display: grid;
-        grid-template-columns: repeat(20, 16px);
-        grid-template-rows: repeat(20, 16px);
+        padding: 16px;
         border: solid $white;
+        .board{
+            width: $game_width;
+            height: $game_width;
+            display: grid;
+            grid-template-columns: repeat(20, 16px);
+            grid-template-rows: repeat(20, 16px);
+            border: 1px solid $white;
 
-        .snake-segment{
-            background: $green;
-            &.head{
-                background: $teal;
+            .snake-segment{
+                background: $green;
+                &.head{
+                    background: $teal;
+                }
             }
-        }
-        .food{
-            background: $red;
+            .food{
+                background: $red;
+            }
         }
     }
 

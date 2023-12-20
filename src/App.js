@@ -1,6 +1,43 @@
 import './App.scss';
+import { useState, useEffect } from 'react';
 
 export default function App() {
+    const [head, setHead] = useState({x: 10, y: 10});
+    const [food, setFood] = useState({
+        x: Math.floor(Math.random() * 20) + 1,
+        y: Math.floor(Math.random() * 20) + 1
+    });
+
+    const segments = []
+
+    function handleKeyPress(e){
+        switch(e.key){
+            // Move head up
+            case "k":
+                setHead(head => ({...head, y: head.y--}))
+                break;
+            // Move head down
+            case "j":
+                setHead(head => ({...head, y: head.y++}))
+                break;
+            // Move head right
+            case "l":
+                setHead(head => ({...head, x: head.x++}))
+                break;
+            // Move head left
+            case "h":
+                setHead(head => ({...head, x: head.x--}))
+                break;
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener("keypress", handleKeyPress)
+        return () => {
+            window.removeEventListener("keypress", handleKeyPress)
+        }
+    }, [])
+
     return (
         <div className="App">
             <header className="">
@@ -20,9 +57,23 @@ export default function App() {
             </header>
 
             <main className="game-board">
-                <div className="snake-segment head"></div>
-                <div className="snake-segment"></div>
-                <div className="food"></div>
+                <div className="board">
+                    <div className="snake-segment head" style={{
+                        gridColumn: head.x,
+                        gridRow: head.y,
+                    }}></div>
+                    {
+                        segments.map((segment, i) => {
+                            return (
+                                <div key={i} className="snake-segment"></div>
+                            )
+                        })
+                    }
+                    <div className="food" style={{
+                        gridColumn: food.x,
+                        gridRow: food.y,
+                    }}></div>
+                </div>
             </main>
         </div>
     );

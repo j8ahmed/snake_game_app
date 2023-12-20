@@ -4,14 +4,40 @@
 
 ## Features
 
+```
 [ ] Start screen
 [ ] Score board (current score, high score)
 [ ] Collision Detection
+
+    1. Construct a function that runs all of the collision detection:
+        - Collision with the walls
+        - Collision with the food
+        - Collision with the segments
+
 [ ] keyboard movement
+
+    1. Establish the starting position of the snake
+    2. Add event listeners for keypress events matching vim keybindings :)
+
 [ ] snake growth
+
+    1. Construct an array to hold the positions of all the snake segments
+    2. Iterate through the array to display each segment
+    3. Add segments as the head collides with food.
+
 [ ] Random food spanning
+    
+    1. Use random number generation within the range of the twenty units both on x and y axes to place food on the board.
+    
 [ ] incrementing game speed (increased difficulty)
 [ ] 
+```
+
+## Bugs / Fixes
+
+### Component rendering twice
+
+This is caused by working in `StrictMode` in development. Each component is rendered twice to check for and notify the user of bugs. This does not persist in production. - [Reference answer - StackOverflow](https://stackoverflow.com/questions/60618844/react-hooks-useeffect-is-called-twice-even-if-an-empty-array-is-used-as-an-ar)
 
 
 --- 
