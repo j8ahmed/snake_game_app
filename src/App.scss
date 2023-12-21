@@ -28,23 +28,23 @@ body {
     .title{
         text-align: center;
     }
-    .scoreboard{
-        width: $game_width;
-        display: flex;
-        justify-content: space-between;
-        text-align: center;
-        h3{
-            padding: 0;
-            margin: 0;
-
-            &.number{
-                padding-bottom: 8px;
-            }
-        }
-    }
     .game-board{
         padding: 16px;
+        padding-top: 8px;
+        background: rgb(10,10,10);
         border: solid $white;
+        .scoreboard{
+            display: flex;
+            justify-content: space-between;
+            text-align: center;
+            h3{
+                padding: 0;
+                margin: 0;
+                &.number{
+                    padding-bottom: 8px;
+                }
+            }
+        }
         .board{
             width: $game_width;
             height: $game_width;

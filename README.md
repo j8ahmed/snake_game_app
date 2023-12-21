@@ -7,17 +7,24 @@
 ```
 [ ] Start screen
 [ ] Score board (current score, high score)
+
+[ ] Game Loop
+    - Set an interval using a ref (NOT a state variable) that moves the snake head whenever the snake direction or speed is changed
+
 [ ] Collision Detection
 
     1. Construct a function that runs all of the collision detection:
         - Collision with the walls
         - Collision with the food
         - Collision with the segments
+    2. Construct the main game loop that runs the collision detection and updates things accordingly whenever the snake's head position is updated
 
 [ ] keyboard movement
 
     1. Establish the starting position of the snake
     2. Add event listeners for keypress events matching vim keybindings :)
+    3. Add interval to keep track of direction and forces constant movement
+        - 
 
 [ ] snake growth
 
