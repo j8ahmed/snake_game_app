@@ -1,57 +1,62 @@
 import './App.scss';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 
 export default function App() {
     // manage game state: "start", "inGame", "end"
     const [gameState, setGameState] = useState("start")
     const [food, setFood] = useState({x: 0, y: 0});
-    const [segments, setSegments] = useState([{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}])
+    const [segments, setSegments] = useState([{x: 10, y: 10}, {x: 9, y: 10} ])
     const [score, setScore] = useState(0)
     const [hiScore, setHiScore] = useState(0)
     const [direction, setDirection] = useState("right") 
     const [gameSpeed, setGameSpeed] = useState(500) 
     const gameLoop = useRef(null) 
 
-    function moveSnake(){
-        setSegments(segments => {
-            const head = segments[0]
-            let newHead;
-            switch(direction){
-                case "up":
-                    newHead = {...head, y: head.y - 1}
-                    break;
-                case "down":
-                    newHead = ({...head, y: head.y + 1})
-                    break;
-                case "right":
-                    newHead = {...head, x: head.x + 1}
-                    break;
-                case "left":
-                    newHead = {...head, x: head.x - 1}
-                    break;
-            }
-            /*
-             * represent snake movements by: 
-             * 1. adding 1 new segment to the front of the segments list
-             * 2. removing 1 old segment from the end of the segments list
-             * The net difference will be zero but it will appear as though 
-             * all the segments have shifted on position over.
-             * In reality the snake segments are like a growing history of 
-             * the snake head movements
-             */
-            if(segments.length === 1){
-                return [newHead]
-            }
-            else if(segments.length > 1){
-                const newSegments = [...segments]
-                newSegments.unshift(newHead)
-                newSegments.pop()
-                return newSegments
-            }
-        })
-    }
+    // checks for collision: return collisionType or false
+    const isCollision = useCallback((point) => {
+        // border Collision
+        if(point.x < 1 || point.x > 20 || point.y < 1 || point.y > 20)
+            return "border"
+        else if(point.x === food.x && point.y === food.y)
+            return "food"
+        for(let i=1; i < segments.length; ++i){
+            const curr = segments[i]
+            if (point.x === curr.x && point.y === curr.y)
+                return "segment"
+        }
+        return false
+    }, [food, segments])
 
-    function handleKeyPress(e){
+    const placeFood = useCallback(() => {
+        setFood(food => {
+            let newPoint = {
+                x: Math.floor(Math.random() * 20) + 1,
+                y: Math.floor(Math.random() * 20) + 1
+            }
+            while (isCollision(newPoint) !== false){
+                newPoint.x = Math.floor(Math.random() * 20) + 1
+                newPoint.y = Math.floor(Math.random() * 20) + 1
+            }
+            return newPoint
+        })
+    }, [isCollision])
+
+    const startGame = useCallback(() => {
+        setGameState("inGame")
+        setSegments([{x: 10, y: 10}, {x: 9, y: 10}])
+        placeFood()
+    }, [placeFood])
+
+    const restartGame = useCallback(() => {
+        clearInterval(gameLoop)
+        setScore(0)
+        setGameSpeed(500)
+        setDirection("right")
+        setSegments([{x: 10, y: 10}, {x: 9, y: 10}])
+        startGame()
+    }, [startGame])
+
+    const handleKeyPress = useCallback((e) => {
         switch(e.key){
             case "k":
                 setDirection("up")
@@ -73,51 +78,7 @@ export default function App() {
                 break;
             default:
         }
-    }
-
-    // checks for collision: return collisionType or false
-    function isCollision(point){
-        // border Collision
-        if(point.x < 1 || point.x > 20 || point.y < 1 || point.y > 20)
-            return "border"
-        else if(point.x === food.x && point.y === food.y)
-            return "food"
-        for(let i=1; i < segments.length; ++i){
-            const curr = segments[i]
-            if (point.x === curr.x && point.y === curr.y)
-                return "segment"
-        }
-        return false
-    }
-
-    function placeFood(){
-        setFood(food => {
-            let newPoint = {
-                x: Math.floor(Math.random() * 20) + 1,
-                y: Math.floor(Math.random() * 20) + 1
-            }
-            while (isCollision(newPoint) !== false){
-                newPoint.x = Math.floor(Math.random() * 20) + 1
-                newPoint.y = Math.floor(Math.random() * 20) + 1
-            }
-            return newPoint
-        })
-    }
-
-    function startGame(){
-        setGameState("inGame")
-        setSegments([{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}])
-        placeFood()
-    }
-
-    function restartGame(){
-        clearInterval(gameLoop)
-        setScore(0)
-        setGameSpeed(500)
-        setDirection("right")
-        setSegments([{x: 10, y: 10}])
-        startGame()
-    }
+    }, [gameState, startGame, restartGame])
 
     // Main game loop
     useEffect(() => {
@@ -147,14 +108,59 @@ export default function App() {
                 break
             default:
         }
-    }, [segments])
+    }, [segments, score, hiScore, isCollision, placeFood])
 
     // Update game loop whenever the direction or the speed is changed
     useEffect(() => {
-        if (gameState == "inGame"){
+        if (gameState === "inGame"){
             clearInterval(gameLoop.current)
             gameLoop.current = setInterval(moveSnake, gameSpeed)
         }
+
+        function moveSnake(){
+            setSegments(segments => {
+                const head = segments[0]
+                let newHead;
+                switch(direction){
+                    case "up":
+                        newHead = {...head, y: head.y - 1}
+                        break;
+                    case "down":
+                        newHead = ({...head, y: head.y + 1})
+                        break;
+                    case "right":
+                        newHead = {...head, x: head.x + 1}
+                        break;
+                    case "left":
+                        newHead = {...head, x: head.x - 1}
+                        break;
+                    default:
+                        break
+                }
+                /*
+                 * represent snake movements by: 
+                 * 1. adding 1 new segment to the front of the segments list
+                 * 2. removing 1 old segment from the end of the segments list
+                 * The net difference will be zero but it will appear as though 
+                 * all the segments have shifted on position over.
+                 * In reality the snake segments are like a growing history of 
+                 * the snake head movements
+                 */
+                if(segments.length === 1){
+                    return [newHead]
+                }
+                else if(segments.length === 2){
+                    return [newHead, head]
+                }
+                else if(segments.length > 2){
+                    const newSegments = [...segments]
+                    newSegments.unshift(newHead)
+                    newSegments.pop()
+                    return newSegments
+                }
+            })
+        }
+
         return () => {
             clearInterval(gameLoop.current)
         }
@@ -165,7 +171,7 @@ export default function App() {
         return () => {
             window.removeEventListener("keypress", handleKeyPress)
         }
-    }, [])
+    }, [handleKeyPress])
 
     return (
         <div className="App">
