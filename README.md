@@ -162,7 +162,7 @@ Started On: 2023-12-20
 
 ### References:
 
-- []()
+- [Vanilla JavaScript Snake Game Tutorial Video - YouTube](https://youtu.be/uyhzCBEGaBY?feature=shared)
 - []()
 - []()
 - []()
