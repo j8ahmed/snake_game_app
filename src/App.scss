@@ -2,6 +2,7 @@
 
 $white: rgb(255,255,255);
 $teal: rgb(0,175,175);
+$blue: rgb(38, 109, 211);
 $green: rgb(0,175,0);
 $red: rgb(175,0,0);
 $game_width: 320px;
@@ -25,6 +26,13 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+    a{
+        text-decoration: none;
+        color: $teal;
+        &:hover{
+            color: $blue;
+        }
+    }
     .title{
         text-align: center;
     }
@@ -52,10 +60,23 @@ body {
             grid-template-columns: repeat(20, 16px);
             grid-template-rows: repeat(20, 16px);
             border: 1px solid $white;
-
+            &.start-screen{
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
+                text-align: center;
+                align-items: center;
+            }
+            &.end-screen{
+                grid-template-columns: 1fr;
+                grid-template-rows: 1fr;
+                text-align: center;
+                align-items: center;
+            }
             .snake-segment{
+                border: 1px solid rgba(255,255,255, 0.1);
                 background: $green;
                 &.head{
+                    z-index: 10;
                     background: $teal;
                 }
             }
@@ -63,6 +84,11 @@ body {
                 background: $red;
             }
         }
+    }
+    .instructions{
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
     }
 
 }

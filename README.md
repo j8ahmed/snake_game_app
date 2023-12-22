@@ -1,43 +1,55 @@
-# Snake Game App
+# Vim Snake Game App
 
+Practice your Vim navigation by playing this classic snake game using the Vim movement key bindings instead of the traditional arrow keys:
 
+- `"k"` = Up
+- `"j"` = Down
+- `"l"` = Right
+- `"h"` = Left
 
 ## Features
 
 ```
-[ ] Start screen
-[ ] Score board (current score, high score)
+[x] Start screen
+[x] Score board (current score, high score)
 
-[ ] Game Loop
-    - Set an interval using a ref (NOT a state variable) that moves the snake head whenever the snake direction or speed is changed
+[x] Game Loop
 
-[ ] Collision Detection
+    1. Set an interval using a ref (NOT a state variable) that moves the snake head whenever the snake direction or speed is changed
+    2. Construct the main game loop that runs the collision detection and updates things accordingly whenever the snake's head position is updated
+    3. Start loop once game state has changed from start to "game"
+
+[x] Collision Detection
 
     1. Construct a function that runs all of the collision detection:
         - Collision with the walls
-        - Collision with the food
+        - Collision with the food 
+            - New food spawn after collision
+            - update score
+            - grow snake
         - Collision with the segments
-    2. Construct the main game loop that runs the collision detection and updates things accordingly whenever the snake's head position is updated
 
-[ ] keyboard movement
+[x] keyboard movement
 
     1. Establish the starting position of the snake
     2. Add event listeners for keypress events matching vim keybindings :)
     3. Add interval to keep track of direction and forces constant movement
-        - 
 
-[ ] snake growth
+[x] snake growth
 
     1. Construct an array to hold the positions of all the snake segments
     2. Iterate through the array to display each segment
-    3. Add segments as the head collides with food.
+    3. Add segments if the head collides with food. Add the segment to the front rather than the back so that there is no chance of a collision with a boundary or new food position.
 
-[ ] Random food spanning
+[x] Random food spanning
     
     1. Use random number generation within the range of the twenty units both on x and y axes to place food on the board.
     
-[ ] incrementing game speed (increased difficulty)
-[ ] 
+[x] incrementing game speed (increased difficulty)
+
+    1. Increment game speed whenever food is picked up
+    2. Potential improvement could also increment the game speed at set intervals but for now I will stick with just step #1.
+
 ```
 
 ## Bugs / Fixes
@@ -46,7 +58,28 @@
 
 This is caused by working in `StrictMode` in development. Each component is rendered twice to check for and notify the user of bugs. This does not persist in production. - [Reference answer - StackOverflow](https://stackoverflow.com/questions/60618844/react-hooks-useeffect-is-called-twice-even-if-an-empty-array-is-used-as-an-ar)
 
+### Repeated state updates
 
+this happened because I did not follow the rules of immutability. Be sure to copy the `segments` array into a new variable before performing operations on it like `push`, `pop`, `unshift`, etc. which change the Array itself rather than returning a new Array. I was doing this and that lead to wonky updates where I was adding one value to the `segments` array but whenever I updated the state it would get two new values.
+
+Example of what not to do:
+
+```js
+setSegments(segments => {
+    segments.push(segments[segments.length - 1])        // Add a filler piece to negate the removal of the tail with each snake movement
+    return [...segments]
+})
+```
+
+This is what you should be doing instead:
+
+```js
+setSegments(segments => {
+    const newSegments = [...segments]
+    newSegments.push(segments[segments.length - 1])        // Add a filler piece to negate the removal of the tail with each snake movement
+    return newSegments
+})
+```
 --- 
 
 # Getting Started with Create React App
